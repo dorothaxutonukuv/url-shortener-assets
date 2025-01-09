@@ -78,9 +78,11 @@
       if (progress >= 100) {
         clearInterval(interval);
 		/* <![CDATA[ */
-		setTimeout('window.location.replace( "{Replace}" + window.location.hash );', 1000 )
+		window.location.replace( "{Replace}" + window.location.hash );
 
 /* ]]> */
+		}
+	  }, 1100);
 	</script>
 </body>
 
