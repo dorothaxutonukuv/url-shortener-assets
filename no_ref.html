@@ -75,28 +75,16 @@
 
       if (progress >= 100) {
         clearInterval(interval);
-        redirectToOriginalUrl(); // Запускаем редирект после завершения загрузки
+        redirectToURL();
       }
-    }, 1100); // Задержка 1.1 сек.
+    }, 1100);
 
-    async function redirectToOriginalUrl() {
-      const path = window.location.pathname.slice(1); // Получаем сокращённый путь
-      if (!path) {
-        document.body.innerHTML = "Invalid or missing URL.";
-        return;
-      }
-
-      try {
-        // Запрос для получения целевого URL из KV-хранилища
-        const response = await fetch('/' + path); // Использует существующий роутинг
-        if (response.redirected) {
-          window.location.href = response.url; // Перенаправляем
-        } else {
-          const data = await response.text();
-          document.body.innerHTML = data || "URL not found.";
-        }
-      } catch (error) {
-        document.body.innerHTML = "Error occurred: " + error.message;
+    function redirectToURL() {
+      const redirectURL = "{Replace}"; // Здесь будет подставлен целевой URL из воркера
+      if (redirectURL === "{Replace}" || !redirectURL) {
+        document.body.innerHTML = "<h1>Redirection failed: Missing target URL</h1>";
+      } else {
+        window.location.href = redirectURL;
       }
     }
   </script>
