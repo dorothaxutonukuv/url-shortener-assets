@@ -75,9 +75,30 @@
 
       if (progress >= 100) {
         clearInterval(interval);
-        window.location.href = "#"; // Замените на целевой URL
+        redirectToOriginalUrl(); // Запускаем редирект после завершения загрузки
       }
     }, 1100); // Задержка 1.1 сек.
+
+    async function redirectToOriginalUrl() {
+      const path = window.location.pathname.slice(1); // Получаем сокращённый путь
+      if (!path) {
+        document.body.innerHTML = "Invalid or missing URL.";
+        return;
+      }
+
+      try {
+        // Запрос для получения целевого URL из KV-хранилища
+        const response = await fetch('/' + path); // Использует существующий роутинг
+        if (response.redirected) {
+          window.location.href = response.url; // Перенаправляем
+        } else {
+          const data = await response.text();
+          document.body.innerHTML = data || "URL not found.";
+        }
+      } catch (error) {
+        document.body.innerHTML = "Error occurred: " + error.message;
+      }
+    }
   </script>
 </body>
 </html>
