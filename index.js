@@ -119,7 +119,7 @@ async function handleRequest(request) {
 
     if (stat === undefined) {
       const domain = requestURL.hostname;
-      const fullUrl = `https://${domain}/${random_key}`;
+      const fullUrl = `/${random_key}`;
       return new Response(`{"status":200,"key":"${fullUrl}"}`, {
         headers: response_header,
       });
