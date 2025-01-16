@@ -73,20 +73,18 @@
     let progress = 0;
 
     const interval = setInterval(() => {
-      progress += 10; // Увеличиваем прогресс каждые 1 секунду
-      progressBar.style.width = progress + '%'; // Устанавливаем ширину шкалы
-      percentage.textContent = progress + '%'; // Отображаем процент
+      progress += 10;
+      progressBar.style.width = progress + '%';
+      percentage.textContent = progress + '%';
 
       if (progress >= 100) {
         clearInterval(interval);
         
-        // Получаем закодированную ссылку из параметра {Replace}
-        const encodedURL = "{Replace}"; // Будет заменено сервером
+        
+        const encodedURL = "{Replace}";
         try {
-          // Декодируем URL из Base64
           const decodedURL = atob(encodedURL);
 
-          // Перенаправляем пользователя на раскодированную ссылку
           window.location.replace(decodedURL + window.location.hash);
         } catch (e) {
           console.error("Error decoding URL:", e);
