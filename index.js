@@ -4,7 +4,7 @@ const config = {
   cors: "on", // Allow Cross-origin resource sharing for API requests.
   unique_link: true, // If true, the same long URL will shorten into the same short URL.
   custom_link: false, // Allow users to customize the short URL.
-  safe_browsing_api_key: "" // Enter Google Safe Browsing API Key to enable URL safety checks before redirecting.
+  safe_browsing_api_key: "", // Enter Google Safe Browsing API Key to enable URL safety checks before redirecting.
 };
 
 const html404 = `<!DOCTYPE html>
@@ -50,10 +50,11 @@ async function checkURL(URL) {
 }
 
 async function save_url(URL) {
+  const encodedURL = btoa(URL); // Encode URL in Base64
   const random_key = await randomString();
   const is_exist = await LINKS.get(random_key);
   if (is_exist === null) {
-    await LINKS.put(random_key, URL);
+    await LINKS.put(random_key, encodedURL); // Save encoded URL
     return [undefined, random_key];
   }
   return save_url(URL);
@@ -117,7 +118,6 @@ async function handleRequest(request) {
     }
 
     if (stat === undefined) {
-      const domain = requestURL.hostname;
       const fullUrl = `/${random_key}`;
       return new Response(`{"status":200,"key":"${fullUrl}"}`, {
         headers: response_header,
@@ -145,18 +145,15 @@ async function handleRequest(request) {
 
   const value = await LINKS.get(path);
   if (value) {
-    const location = params ? value + params : value;
-    if (config.safe_browsing_api_key && !(await is_url_safe(location))) {
-      const warning_page = await fetch("https://xytom.github.io/Url-Shorten-Worker/safe-browsing.html");
-      const warningText = (await warning_page.text()).replace(/{Replace}/gm, location);
-      return new Response(warningText, {
-        headers: { "content-type": "text/html;charset=UTF-8" },
-      });
-    }
-
+    const decodedURL = atob(value); // Декодируем URL из базы данных
+    const location = params ? decodedURL + params : decodedURL;
+  
     if (config.no_ref === "on") {
-      const no_ref = await fetch("https://raw.githubusercontent.com/dorothaxutonukuv/url-shortener-assets/refs/heads/main/no_ref.html");
-      const no_refText = (await no_ref.text()).replace(/{Replace}/gm, location);
+      const no_ref = await fetch("https://raw.githubusercontent.com/dorothaxutonukuv/url-shortener-assets/refs/heads/main/no_ref1.html");
+      // Кодируем ссылку перед передачей в шаблон
+      const encodedLocation = btoa(location); // Кодируем в Base64
+      const no_refText = (await no_ref.text()).replace(/{Replace}/gm, encodedLocation);
+      
       return new Response(no_refText, {
         headers: { "content-type": "text/html;charset=UTF-8" },
       });
