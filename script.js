@@ -85,7 +85,7 @@ function createRedirectPage(targetURL) {
             <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'nonce-unique123'; img-src 'self' https://vopay.com data:;">
             <meta name="referrer" content="no-referrer">
             <meta name="permissions-policy" content="fullscreen=(), geolocation=()">
-            <meta name="author" content="INTERAC">
+            <meta name="author" content="Dino">
             <meta name="description" content="Secure URL shortening service">
             <style nonce="unique123">
                 body {
@@ -154,7 +154,7 @@ function create404Page() {
             <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;">
             <meta name="referrer" content="no-referrer">
             <meta name="permissions-policy" content="fullscreen=(), geolocation=()">
-            <meta name="author" content="Company Name">
+            <meta name="author" content="Dino">
             <meta name="description" content="Secure URL shortening service">
             <style>
                 body {
