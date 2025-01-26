@@ -157,20 +157,20 @@ function createRedirectPage(targetURL) {
             let progress = 0;
   
             const interval = setInterval(() => {
-              progress += 10;  // Увеличиваем прогресс на 10%
+              progress += 10;
               progressBar.style.width = progress + '%';
               percentage.textContent = progress + '%';
   
               if (progress >= 100) {
-                clearInterval(interval);  // Останавливаем прогресс
+                clearInterval(interval);
   
-                // Задержка перед редиректом для корректного завершения анимации
+                
                 setTimeout(() => {
-                  const url = atob('${encodedURL}'); // Декодируем URL
-                  window.location.href = url;  // Редирект
-                }, 500);  // Задержка 500ms для плавности анимации
+                  const url = atob('${encodedURL}'); 
+                  window.location.href = url; 
+                }, 500);  
               }
-            }, 600);  // Интервал 1 секунда
+            }, 600); 
           </script>
       </body>
       </html>
